@@ -1,0 +1,27 @@
+.menu-button {
+  border-radius: 50%;
+  height: 50px;
+  width: 50px;
+  font-size: 2.0rem;
+  background-color: var(--ion-menu-buttons-background);
+  color: var(--ion-color-light);
+  margin-bottom: 5px;
+}
+
+.menu-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 10px;
+
+  ion-label {
+    font-size: 0.9rem;
+  }
+}
+
+.menu-container:focus,
+.menu-button:focus {
+  outline: 0;
+}
+

@@ -1,0 +1,23 @@
+.main-container {
+  padding: 20px;
+
+}
+
+.title-container {
+  margin-bottom: 50px;
+  .title {
+    color: var(--ion-color-light);
+    font-weight: bold;
+  }
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  img {
+    height: 100px;
+    width: 120px;
+    align-self: center;
+    margin-bottom: 10px;
+  }
+}

@@ -1,0 +1,24 @@
+.main-container {
+  padding: 20px;
+}
+
+.sign-up-title-container {
+  height: 10%;
+  .title {
+    color: var(--ion-color-light); font-weight: bold;
+  }
+}
+
+.form-container {
+  height: 90%;
+}
+
+.login-form {
+  margin-top: 50px;
+  span.primary {
+    color: var(--ion-color-primary);
+  }
+  span.light {
+    color: var(--ion-color-light);
+  }
+}

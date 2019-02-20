@@ -1,0 +1,11 @@
+.main-container {
+  padding: 20px;
+}
+
+.title-container {
+  margin-bottom: 50px;
+  .title {
+    color: var(--ion-color-light);
+    font-weight: bold;
+  }
+}

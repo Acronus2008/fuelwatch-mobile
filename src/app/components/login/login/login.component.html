@@ -1,0 +1,35 @@
+<div class="login-buttons-container" style="">
+
+  <ion-button color="dark" (click)="loginTwitter()" >Twitter</ion-button>
+  <ion-button color="dark" (click)="loginFacebook()" >Facebook</ion-button>
+
+</div>
+<div class="form-container">
+  <ion-item>
+    <ion-label position="floating">E-Mail</ion-label>
+    <ion-input></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label position="floating">Password</ion-label>
+    <ion-input type="password"></ion-input>
+  </ion-item>
+
+  <div class="login-form">
+    <ion-row>
+      <ion-col size="4">
+        <ion-button color="primary" no-margin>Sign In</ion-button>
+      </ion-col>
+      <ion-col size="8" text-end>
+        <span class="primary" (click)="forgotPassword()" >Forgot your password?</span>
+      </ion-col>
+    </ion-row>
+    <ion-row margin-top>
+      <ion-col size="8">
+        <span class="light">Do you have an account?</span>
+      </ion-col>
+      <ion-col size="4" text-end>
+        <span class="primary" (click)="signUp()">Sign Up</span>
+      </ion-col>
+    </ion-row>
+  </div>
+</div>

@@ -1,0 +1,35 @@
+<ion-header class="top-bar">
+  <ion-toolbar>
+    <!--<ion-toolbar color="secondary">-->
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-buttons slot="secondary" >
+      <!--<ion-buttons slot="secondary" style="position: absolute; right: 2px" >-->
+      <ion-button>
+        <ion-icon slot="icon-only" name="search"></ion-icon>
+      </ion-button>
+      <ion-button>
+        <ion-icon slot="icon-only" name="options"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <!--<ion-buttons slot="primary">
+        <ion-button color="primary">
+            <ion-icon slot="icon-only" name="more"></ion-icon>
+        </ion-button>
+    </ion-buttons>-->
+    <ion-title >FuelWatch</ion-title>
+  </ion-toolbar>
+  <div text-center class="sub-toolbar">
+    <!--<ion-toggle ></ion-toggle>-->
+    <ion-buttons justify-content-center>
+      <ion-button routerLink="/home/map">Map</ion-button>
+      <ion-button routerLink="/home/list">List</ion-button>
+    </ion-buttons>
+  </div>
+
+</ion-header>
+
+<ion-content>
+  <router-outlet></router-outlet>
+</ion-content>

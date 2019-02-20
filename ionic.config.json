@@ -1,0 +1,7 @@
+{
+  "name": "fw",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
+}

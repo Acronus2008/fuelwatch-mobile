@@ -1,0 +1,75 @@
+<div class="map" id="map">
+
+    <!--<ion-fab-button (click)="show_profile_data = !show_profile_data">
+        <ion-icon name="settings"></ion-icon>
+    </ion-fab-button>-->
+</div>
+<!--<div class="profile-data"  [@slideInOut]>-->
+<div class="profile-data" [@slideInOut] *ngIf="show_profile_data">
+    <div class="section1">
+        <div class="flex-container">
+            <div>
+                <ion-avatar slot="start" style="margin-right: 15px;">
+                    <img src="./assets/logos/BP.png"/>
+                </ion-avatar>
+            </div>
+            <div style="flex-grow: 1;">
+            <!--<div style="flex-grow: 1; border: 1px solid #0cd1e8">-->
+
+                <ion-label class="trading-name-label">{{station.trading_name | uppercase}}</ion-label>
+                <ion-fab horizontal="end" >
+                    <ion-fab-button>
+                        <ion-icon name="settings"></ion-icon>
+                    </ion-fab-button>
+                    <ion-fab-list side="bottom">
+                        <ion-fab-button (click)="sharedGasStation()" >
+                            <ion-icon name="logo-vimeo" ></ion-icon>
+                        </ion-fab-button>
+                        <ion-fab-button (click)="goToGasStation()" >
+                            <ion-icon name="logo-video" ></ion-icon>
+                        </ion-fab-button>
+                        <ion-fab-button (click)="viewGasStationImages()">
+                            <ion-icon name="logo-video"></ion-icon>
+                        </ion-fab-button>
+                        <ion-fab-button (click)="addFavoriteGasStation()">
+                            <ion-icon name="logo-video"></ion-icon>
+                        </ion-fab-button>
+                        <ion-fab-button (click)="callToGasStation()">
+                            <ion-icon name="logo-video"></ion-icon>
+                        </ion-fab-button>
+                    </ion-fab-list>
+                </ion-fab>
+            </div>
+            <!--<div style="width: auto; border: 1px solid #7e57ff">
+
+                <ion-label>2.4km</ion-label>
+            </div>-->
+        </div>
+        <div class="flex-container">
+            <div style="flex-grow: 1; ">
+                <p no-margin>{{station.address}}</p>
+            </div>
+            <div style="width: auto;">
+
+                <ion-label class="distance">2.4km</ion-label>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="section2">
+        <div class="flex-container">
+            <div style="flex-grow: 1;">
+                <ion-label></ion-label>
+
+            </div>
+            <div style="width: auto;f">
+
+                <!--<ion-label>2.4km</ion-label>-->
+            </div>
+        </div>
+
+    </div>
+    <div class="section3"></div>
+
+</div>
