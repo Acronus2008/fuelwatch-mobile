@@ -12,21 +12,45 @@ import {StatusBar} from '@ionic-native/status-bar/ngx';
 export class AppComponent {
     public appPages = [
         {
-            title: 'Login',
-            url: '/login',
-            icon: 'home'
-        },
-        {
             title: 'User Profile',
             url: '/user/profile',
-            icon: 'contact'
+            icon: 'fa fa-user-circle'
+        },
+        {
+            title: 'Starred Gas Station',
+            url: '/',
+            icon: 'fa fa-heart'
+        },
+        {
+            title: 'Station Reviews',
+            url: '/',
+            icon: 'fa fa-eye'
         },
         {
             title: 'Settings',
             url: '/user/settings',
-            icon: 'settings'
+            icon: 'fa fa-cogs'
+        },
+        {
+            title: 'Help',
+            url: '/',
+            icon: 'fa fa-question-circle'
+        },
+        {
+            title: 'Feedback',
+            url: '/',
+            icon: 'fa fa-comments'
+        },
+        {
+            title: 'Terms of use',
+            url: '/',
+            icon: 'fa fa-file-text'
+        },
+        {
+            title: 'Login',
+            url: '/login',
+            icon: 'fa fa-sign-in'
         }
-
     ];
 
     constructor(
