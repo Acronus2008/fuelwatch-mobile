@@ -1,0 +1,10 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" >
+<svg>
+    <defs>
+        <pattern xmlns="http://www.w3.org/2000/svg" id="logo" patternUnits="userSpaceOnUse" width="600" height="450">ssss
+            <image xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/brand/shell.png" x="0" y="0" width="40" height="40"/><!-- Image from http://silviahartmann.com/background-tile/6-grass-meadow-tile.php-->
+        </pattern>
+    </defs>
+    <path xmlns="http://www.w3.org/2000/svg" d="M768 896q0 106 -75 181t-181 75t-181 -75t-75 -181t75 -181t181 -75t181 75t75 181zM1024 896q0 -109 -33 -179l-364 -774q-16 -33 -47.5 -52t-67.5 -19t-67.5 19t-46.5 52l-365 774q-33 70 -33 179q0 212 150 362t362 150t362 -150t150 -362z" fill="url(#img1)"/>
+</svg>

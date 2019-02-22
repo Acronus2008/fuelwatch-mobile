@@ -87,7 +87,8 @@
         <variable name="API_KEY_FOR_IOS" value="AIzaSyApPBMD9n7kHiz556ce1gu9E4FYUKpLJPM" />
     </plugin>
     <plugin name="cordova-plugin-browsersync" spec="^1.1.0" />
-    <engine name="browser" spec="5.0.4" />
-    <engine name="android" spec="7.1.4" />
-    <engine name="ios" spec="4.5.5" />
+    <plugin name="mx.ferreyra.callnumber" spec="~0.0.2" />
+    <engine name="android" spec="8.0.0" />
+    <engine name="ios" spec="5.0.0" />
+    <engine name="browser" spec="^5.0.4" />
 </widget>
