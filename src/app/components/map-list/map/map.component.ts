@@ -1,12 +1,12 @@
 /// <reference types="@types/googlemaps" />
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {Environment, GoogleMap, GoogleMaps, MarkerCluster} from '@ionic-native/google-maps';
+import {Component, ElementRef, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
 import {LoadingController, Platform, ToastController} from '@ionic/angular';
 import {NgxXml2jsonService} from 'ngx-xml2json';
 import {GasStationService} from '../../../services/gas-station.service';
 import {GasStation} from '../../../model/gas-station';
 import {MapService} from '../../../services/map.service';
 import 'js-marker-clusterer';
+import {ActivatedRoute, Router} from '@angular/router';
 declare var MarkerClusterer: any;
 
 @Component({
@@ -21,10 +21,11 @@ export class MapComponent implements OnInit {
     // loading: any;
     // require: any;
     @ViewChild('map') mapElement: ElementRef;
-
+    @Output() open: EventEmitter<any> = new EventEmitter();
+    
     constructor(
         private platform: Platform, private xml2json: NgxXml2jsonService, private gasStationService: GasStationService,
-        private mapService: MapService) {
+        private mapService: MapService, private route: ActivatedRoute, private router: Router) {
         console.log(this.gas_stations);
     }
 
@@ -39,37 +40,45 @@ export class MapComponent implements OnInit {
         try {
             await this.LoadMap();
             this.gasStationService.listGasStations().subscribe((response: GasStation[]) => {
-                // this.mapService.addClusterJs(response);
                 const stations = this.gasStationService.mapGasStations(response);
                 console.log(stations);
                 console.log(this.map);
                 const markers = [];
                 stations.map(function (station, i) {
                     const marker = new google.maps.Marker({
-                        position: {lat: parseFloat(station.latitude), lng: parseFloat(station.longitude)},
-                        // label: '$' + station.price,
+                        position: {
+                            lat: parseFloat(station.latitude),
+                            lng: parseFloat(station.longitude)
+                        },
                         label: {
                             text: '$' + station.price,
                             color: 'white',
                             fontSize: '8px'
+
                             // Add in the custom label here
                             // fontFamily: 'Roboto, Arial, sans-serif, custom-label-' + label
                         },
-                        icon: './assets/marker/marker BP.png'
+                        icon: {
+                            url: './assets/marker/map_market.svg'
+                        }
                         // Otras propiedades. Por ejemplo el icono de cada marker
                     });
 
-                    google.maps.event.addListener(marker, 'click', (function (m) {
-                        return function () {
-                            console.log(marker);
-                        };
+                    google.maps.event.addListener(marker, 'click', ((m) => {
+                            return function () {
+                               console.log(m);
+                               console.log(marker);
+                                // window.location.href = '/home/list/profile';
+                            };
                     })(marker));
+
                     markers.push(marker);
                 });
 
                 const clusterStyles = [
                     {
                         textColor: 'white',
+                        // url: './assets/marker/cluster/m1.png',
                         url: './assets/marker/cluster/m1.png',
                         height: 50,
                         width: 50
@@ -83,16 +92,11 @@ export class MapComponent implements OnInit {
                 };
 
                 console.log(markers);
-                // const MarkerClusterer = require('js-marker-clusterer');
-                // const mc = new MarkerClusterer(this.map, markers);
                 const mc = new MarkerClusterer(this.map, markers, mcOptions);
             });
-            // this.mapService.addCluster()
         } catch (e) {
             console.log('We have a problem to load the map ${0}', e);
         }
-
-
     }
 
     async LoadMap() {
