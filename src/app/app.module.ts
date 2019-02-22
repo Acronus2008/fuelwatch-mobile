@@ -12,15 +12,17 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { StationProfileComponent } from './components/map-list/station-profile/station-profile.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {AngularFontAwesomeModule} from 'angular-font-awesome';
 
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
   imports: [
-    BrowserModule,
+      BrowserModule,
       BrowserAnimationsModule,
-    IonicModule.forRoot(),
-    AppRoutingModule
+      IonicModule.forRoot(),
+      AppRoutingModule,
+      AngularFontAwesomeModule
   ],
   providers: [
     StatusBar,
