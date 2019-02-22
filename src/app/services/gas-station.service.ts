@@ -14,15 +14,19 @@ export class GasStationService {
     }
 
     listGasStations(): Observable<any> {
-        // const headers = new HttpHeaders({'Access-Control-Allow-Origin': '*'});
-        // const params = new HttpParams({fromString: 'Product=1&Suburb=Albany&Surrounding=no'});
-        // return this.http.get(FUEL_WATCH_RSS_SERVICE, {
-        //         headers: headers, params: params, responseType: 'text'
-        //     }
-        // );
+        const headers = new HttpHeaders({
+            'Access-Control-Allow-Credentials' : 'true',
+            'Access-Control-Allow-Origin' : '*',
+            'Access-Control-Allow-Origins' : '*'
+        });
+        const params = new HttpParams({fromString: 'Product=1&Suburb=Albany&Surrounding=no'});
+        return this.http.get(FUEL_WATCH_RSS_SERVICE, {
+                headers: headers, params: params, responseType: 'text'
+            }
+        );
 
-        return this.http.get('http://localhost:3002/fuelWatchRSS/Suburb/Albany/Surrounding?Product=1&Suburb=Albany&Surrounding=no',
-            {responseType: 'text'});
+        // return this.http.get('http://localhost:3002/fuelWatchRSS/Suburb/Albany/Surrounding?Product=1&Suburb=Albany&Surrounding=no',
+        //     {responseType: 'text'});
     }
 
     mapGasStations(xml_response) {
