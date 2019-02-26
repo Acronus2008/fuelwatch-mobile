@@ -1,12 +1,16 @@
-import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {GasStation} from '../../../model/gas-station';
 import {GasStationService} from '../../../services/gas-station.service';
 import {animate, style, transition, trigger} from '@angular/animations';
 import {MapService} from '../../../services/map.service';
 import {ActivatedRoute, Router} from '@angular/router';
-declare var MarkerClusterer: any;
 // import {animate, keyframes, style, transition, trigger} from "@angular/animations";
-import { CallNumber } from '@ionic-native/call-number/ngx';
+import {CallNumber} from '@ionic-native/call-number/ngx';
+import {Facebook} from '@ionic-native/facebook/ngx';
+import {NativeStorage} from '@ionic-native/native-storage/ngx';
+import {LoadingController} from '@ionic/angular';
+
+declare var MarkerClusterer: any;
 
 @Component({
     selector: 'app-station-profile',
@@ -31,9 +35,15 @@ export class StationProfileComponent implements OnInit, OnDestroy {
     show_profile_data = false;
     isLogged = false;
     map: any;
+    mapOptions: any;
+    mapMarkers: { latitude: any, longitude: any };
 
     constructor(private stationService: GasStationService, private mapService: MapService,
-                private router: Router, private route: ActivatedRoute, private callNumber: CallNumber) {
+                private router: Router, private route: ActivatedRoute, private callNumber: CallNumber,
+                public loadingController: LoadingController,
+                private facebook: Facebook,
+                private nativeStorage: NativeStorage) {
+
         this.station = this.stationService.getActualGasStation();
         this.isLogged = localStorage['isLogged'];
 
@@ -56,10 +66,18 @@ export class StationProfileComponent implements OnInit, OnDestroy {
 
     sharedGasStation() {
 
-        if (!this.userIsLogged()) {
-            this.router.navigate(['login']);
-            return;
-        }
+        this.userIsLogged().then((logged) => {
+
+            console.log(logged);
+            if (logged.logged === false) {
+                this.router.navigate(['login']);
+                return;
+            }
+
+            if (logged.with === 'facebook') {
+                this.sharedGasStationWithFacebook();
+            }
+        });
 
         console.log(this.station);
     }
@@ -98,8 +116,15 @@ export class StationProfileComponent implements OnInit, OnDestroy {
 
     /*Verify if the user is logged for make some actions in this view*/
     userIsLogged() {
-        return true;
-        // return 'true' === this.isLogged;
+        let loggedObject: Promise<{ with: string; logged: any } | never>;
+
+        loggedObject = this.checkIfUserLoggedWithFacebook().then((interconnected) => {
+            console.log(interconnected);
+            return { with: 'facebook', logged: interconnected };
+        });
+
+        console.log(loggedObject);
+        return loggedObject;
     }
 
     async LoadMap() {
@@ -111,13 +136,58 @@ export class StationProfileComponent implements OnInit, OnDestroy {
                 'mapTypeId': google.maps.MapTypeId.ROADMAP
             };
 
+            this.mapOptions = options;
+
             this.map = new google.maps.Map(document.getElementById('map_canvas'), options);
         } catch (e) {
             console.log(e);
         }
     }
 
-    setStationMarketToMap() {
+    private checkIfUserLoggedWithFacebook() {
+        let userLoggedWithFacebook: Promise<any | never>;
+
+        const localFacebookUser =  this.nativeStorage.getItem('facebook_user');
+
+        if (localFacebookUser) {
+            userLoggedWithFacebook = this.facebook.getLoginStatus().then((conection) => {
+                return conection.status === 'connected';
+            });
+        }
+
+        return userLoggedWithFacebook;
+    }
+
+    private sharedGasStationWithFacebook() {
+        const imageMapUrl = this.getSnapShotFromMap(this.station.latitude, this.station.longitude);
+        console.log(imageMapUrl);
+        this.facebook.showDialog({
+            method: 'share',
+            picture: imageMapUrl,
+            name: this.station.trading_name,
+            message: 'Shared from FuelWatch App',
+            caption: 'Testing using phonegap plugin',
+            description: this.station.description
+        }).then((response) => {
+            console.log(response);
+        }).catch((e) => {
+            console.log(e);
+        });
+    }
+
+    private getSnapShotFromMap(latitude, longitude) {
+        let staticMapUrl = 'https://maps.googleapis.com/maps/api/staticmap';
+        staticMapUrl += '?key=AIzaSyApPBMD9n7kHiz556ce1gu9E4FYUKpLJPM' +
+            '&center=' + latitude + ',' + longitude + '' +
+            '&size=220x350' +
+            '&zoom=' + this.mapOptions.zoom + '' +
+            '&maptype=' + this.mapOptions.mapTypeId + '' +
+            '&markers=color:red|' + parseFloat(this.mapMarkers.latitude) + ',' + parseFloat(this.mapMarkers.longitude);
+        console.log(staticMapUrl);
+        return staticMapUrl;
+    }
+
+    private setStationMarketToMap() {
         const markers = [];
         const marker = new google.maps.Marker({
             position: {lat: parseFloat(this.station.latitude), lng: parseFloat(this.station.longitude)},
@@ -128,7 +198,7 @@ export class StationProfileComponent implements OnInit, OnDestroy {
                 // Add in the custom label here
                 // fontFamily: 'Roboto, Arial, sans-serif, custom-label-' + label
             },
-            icon: './assets/marker/marker BP.png'
+            icon: './assets/marker/map_market.svg'
             // Otras propiedades. Por ejemplo el icono de cada marker
         });
 
@@ -138,7 +208,7 @@ export class StationProfileComponent implements OnInit, OnDestroy {
             };
         })(marker));
         markers.push(marker);
-
+        this.mapMarkers = {latitude: this.station.latitude, longitude: this.station.longitude};
         const clusterStyles = [
             {
                 textColor: 'white',
