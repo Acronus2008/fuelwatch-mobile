@@ -4,7 +4,7 @@ import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {NgxXml2jsonService} from 'ngx-xml2json';
 import {GasStation} from '../model/gas-station';
 
-const FUEL_WATCH_RSS_SERVICE = 'https://www.fuelwatch.wa.gov.au/fuelwatch/fuelWatchRSS';
+import { environment, FUELWATCH_RSS_URL } from '../../environments/environment';
 
 @Injectable()
 export class GasStationService {
@@ -20,7 +20,7 @@ export class GasStationService {
             'Access-Control-Allow-Origins' : '*'
         });
         const params = new HttpParams({fromString: 'Product=1&Suburb=Albany&Surrounding=no'});
-        return this.http.get(FUEL_WATCH_RSS_SERVICE, {
+        return this.http.get(FUELWATCH_RSS_URL, {
                 headers: headers, params: params, responseType: 'text'
             }
         );
