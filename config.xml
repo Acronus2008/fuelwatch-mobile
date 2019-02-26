@@ -88,6 +88,18 @@
     </plugin>
     <plugin name="cordova-plugin-browsersync" spec="^1.1.0" />
     <plugin name="mx.ferreyra.callnumber" spec="~0.0.2" />
+    <plugin name="cordova-plugin-facebook4" spec="^4.2.1">
+        <variable name="APP_ID" value="146127919671895" />
+        <variable name="APP_NAME" value="io.wa.fuelwatch" />
+        <variable name="FACEBOOK_HYBRID_APP_EVENTS" value="true" />
+        <variable name="FACEBOOK_ANDROID_SDK_VERSION" value="4.40.0" />
+    </plugin>
+    <plugin name="cordova-plugin-nativestorage" spec="^2.3.2" />
+    <plugin name="twitter-connect-plugin" spec="0.6.0">
+        <variable name="FABRIC_KEY" value="1a6d47187f0548751eb41de2ef5fdaae3e09ea95" />
+        <variable name="TWITTER_KEY" value="Pkgk7ibw3rGpAyV1B8LLb7nyT" />
+        <variable name="TWITTER_SECRET" value="tJdNnCfFnyog1Mctzh9Fs5i0z4SjbOW3zGx1Y8rz6vl6mIaESZ" />
+    </plugin>
     <engine name="android" spec="8.0.0" />
     <engine name="ios" spec="5.0.0" />
     <engine name="browser" spec="^5.0.4" />
