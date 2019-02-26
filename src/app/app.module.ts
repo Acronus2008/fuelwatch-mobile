@@ -13,6 +13,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { StationProfileComponent } from './components/map-list/station-profile/station-profile.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {AngularFontAwesomeModule} from 'angular-font-awesome';
+import { Facebook } from '@ionic-native/facebook/ngx';
+import {TwitterConnect} from '@ionic-native/twitter-connect/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -27,7 +29,9 @@ import {AngularFontAwesomeModule} from 'angular-font-awesome';
   providers: [
     StatusBar,
     SplashScreen,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+      Facebook,
+      TwitterConnect
   ],
   bootstrap: [AppComponent]
 })
