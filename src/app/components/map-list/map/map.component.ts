@@ -162,7 +162,7 @@ export class MapComponent implements OnInit {
             const request = {
                 origin: start,
                 destination: end,
-                travelMode: google.maps.DirectionsTravelMode.DRIVING
+                travelMode: google.maps.TravelMode.DRIVING
             };
             this.directionsService.route(request, (response, status) => {
                 if (status === google.maps.DirectionsStatus.OK) {
