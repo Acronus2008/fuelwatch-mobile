@@ -16,6 +16,11 @@ import {AngularFontAwesomeModule} from 'angular-font-awesome';
 import { Facebook } from '@ionic-native/facebook/ngx';
 import {TwitterConnect} from '@ionic-native/twitter-connect/ngx';
 
+import { SocialSharing } from '@ionic-native/social-sharing/ngx';
+import { File } from '@ionic-native/file/ngx';
+
+import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ngx';
+
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -31,7 +36,11 @@ import {TwitterConnect} from '@ionic-native/twitter-connect/ngx';
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
       Facebook,
-      TwitterConnect
+      TwitterConnect,
+      SocialSharing,
+      File,
+      FileTransfer,
+      FileTransferObject
   ],
   bootstrap: [AppComponent]
 })

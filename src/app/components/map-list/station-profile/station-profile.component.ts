@@ -10,6 +10,13 @@ import {Facebook} from '@ionic-native/facebook/ngx';
 import {NativeStorage} from '@ionic-native/native-storage/ngx';
 import {LoadingController} from '@ionic/angular';
 
+import { SocialSharing } from '@ionic-native/social-sharing/ngx';
+import { File } from '@ionic-native/file/ngx';
+
+import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ngx';
+
+import * as html2canvas from 'html2canvas';
+
 declare var MarkerClusterer: any;
 
 @Component({
@@ -38,11 +45,18 @@ export class StationProfileComponent implements OnInit, OnDestroy {
     mapOptions: any;
     mapMarkers: { latitude: any, longitude: any };
 
+    text: 'Check out the Ionic Academy!';
+    url: 'https://ionicacademy.com';
+
+    private fileTransfer: FileTransferObject;
+
     constructor(private stationService: GasStationService, private mapService: MapService,
                 private router: Router, private route: ActivatedRoute, private callNumber: CallNumber,
                 public loadingController: LoadingController,
                 private facebook: Facebook,
-                private nativeStorage: NativeStorage) {
+                private nativeStorage: NativeStorage,
+                private socialSharing: SocialSharing, private file: File,
+                private transfer: FileTransfer) {
 
         this.station = this.stationService.getActualGasStation();
         this.isLogged = localStorage['isLogged'];
@@ -64,20 +78,73 @@ export class StationProfileComponent implements OnInit, OnDestroy {
         this.show_profile_data = false;
     }
 
+    async shareFacebook() {
+        //const file = await this.resolveLocalFile();
+        const imageMapUrl = this.getSnapShotFromMap(this.station.latitude, this.station.longitude);
+
+        imageMapUrl.then((image)=> {
+           console.log(image);
+        });
+
+
+        const fileName = 'imageMap_' + Math.random().toString(10) + '.png';
+
+        // await this.downloadFile(fileName, imageMapUrl);
+        // const fileNameUrl = await this.resolveLocalFile(fileName);
+
+        // Image or URL works
+        this.socialSharing.shareViaFacebook(null, '', null).then(() => {
+            //this.removeTempFile(file.name);
+        }).catch((e) => {
+            // Error!
+        });
+    }
+
+    async shareTwitter() {
+        // Either URL or Image
+        this.socialSharing.shareViaTwitter(null, null, this.url).then(() => {
+            // Success
+        }).catch((e) => {
+            // Error!
+        });
+    }
+
+    resolveLocalFile(fileName) {
+        return this.file.copyFile(this.file.applicationDirectory, fileName, this.file.cacheDirectory, `${new Date().getTime()}.jpg`);
+    }
+
+    async downloadFile(fileName, filePath) {
+        const url = encodeURI(filePath);
+        this.fileTransfer = this.transfer.create();
+        this.fileTransfer.download(url, this.file.externalRootDirectory + fileName, true).then((entry) => {
+            // here logging our success downloaded file path in mobile.
+            console.log('download completed: ' + entry.toURL());
+        }, (error) => {
+            // here logging our error its easier to find out what type of error occured.
+            console.log('download failed: ' + error);
+        });
+    }
+
+    removeTempFile(name) {
+        this.file.removeFile(this.file.cacheDirectory, name);
+    }
+
     sharedGasStation() {
 
-        this.userIsLogged().then((logged) => {
+        // this.userIsLogged().then((logged) => {
+        //
+        //     console.log(logged);
+        //     if (logged.logged === false) {
+        //         this.router.navigate(['login']);
+        //         return;
+        //     }
+        //
+        //     if (logged.with === 'facebook') {
+        //         this.sharedGasStationWithFacebook();
+        //     }
+        // });
 
-            console.log(logged);
-            if (logged.logged === false) {
-                this.router.navigate(['login']);
-                return;
-            }
 
-            if (logged.with === 'facebook') {
-                this.sharedGasStationWithFacebook();
-            }
-        });
 
         console.log(this.station);
     }
@@ -175,7 +242,7 @@ export class StationProfileComponent implements OnInit, OnDestroy {
         });
     }
 
-    private getSnapShotFromMap(latitude, longitude) {
+    async getSnapShotFromMap(latitude, longitude) {
         let staticMapUrl = 'https://maps.googleapis.com/maps/api/staticmap';
         staticMapUrl += '?key=AIzaSyApPBMD9n7kHiz556ce1gu9E4FYUKpLJPM' +
             '&center=' + latitude + ',' + longitude + '' +
@@ -184,7 +251,24 @@ export class StationProfileComponent implements OnInit, OnDestroy {
             '&maptype=' + this.mapOptions.mapTypeId + '' +
             '&markers=color:red|' + parseFloat(this.mapMarkers.latitude) + ',' + parseFloat(this.mapMarkers.longitude);
         console.log(staticMapUrl);
-        return staticMapUrl;
+
+
+        //TODO Tony esto es para capturar una imagen del mapa y compartirla, esto hay que hacerlo para compartir una imagen del mapa de la estacion
+        /*
+        * he tratado de hacerlo pero no me funciona, estoy usando el social sharing para compartir
+        * esperemos que funciones
+        * */
+
+        const staticLink = '<img src="' + staticMapUrl + '"/>';
+        let linkDiv = document.getElementById('map_canvas_static');
+        linkDiv.innerHTML = staticLink;
+        let image = null;
+        await html2canvas(linkDiv).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+            image = imgData;
+        });
+
+        return image;
     }
 
     private setStationMarketToMap() {

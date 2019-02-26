@@ -100,6 +100,9 @@
         <variable name="TWITTER_KEY" value="Pkgk7ibw3rGpAyV1B8LLb7nyT" />
         <variable name="TWITTER_SECRET" value="tJdNnCfFnyog1Mctzh9Fs5i0z4SjbOW3zGx1Y8rz6vl6mIaESZ" />
     </plugin>
+    <plugin name="cordova-plugin-x-socialsharing" spec="5.4.4" />
+    <plugin name="cordova-plugin-file" spec="6.0.1" />
+    <plugin name="cordova-plugin-file-transfer" spec="1.7.1" />
     <engine name="android" spec="8.0.0" />
     <engine name="ios" spec="5.0.0" />
     <engine name="browser" spec="^5.0.4" />
