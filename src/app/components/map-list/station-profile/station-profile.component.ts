@@ -11,13 +11,14 @@ import {NativeStorage} from '@ionic-native/native-storage/ngx';
 import {LoadingController} from '@ionic/angular';
 
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
-import { File } from '@ionic-native/file/ngx';
-
+import { File, IWriteOptions} from '@ionic-native/file/ngx';
+import { Storage } from '@ionic/storage';
 import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ngx';
 
 import * as html2canvas from 'html2canvas';
-
 declare var MarkerClusterer: any;
+
+const STORAGE_KEY = 'IMAGE_LIST';
 
 @Component({
     selector: 'app-station-profile',
@@ -48,6 +49,8 @@ export class StationProfileComponent implements OnInit, OnDestroy {
     text: 'Check out the Ionic Academy!';
     url: 'https://ionicacademy.com';
 
+    storedImages = [];
+
     private fileTransfer: FileTransferObject;
 
     constructor(private stationService: GasStationService, private mapService: MapService,
@@ -56,7 +59,8 @@ export class StationProfileComponent implements OnInit, OnDestroy {
                 private facebook: Facebook,
                 private nativeStorage: NativeStorage,
                 private socialSharing: SocialSharing, private file: File,
-                private transfer: FileTransfer) {
+                private transfer: FileTransfer,
+                private storage: Storage) {
 
         this.station = this.stationService.getActualGasStation();
         this.isLogged = localStorage['isLogged'];
@@ -78,75 +82,16 @@ export class StationProfileComponent implements OnInit, OnDestroy {
         this.show_profile_data = false;
     }
 
-    async shareFacebook() {
-        //const file = await this.resolveLocalFile();
-        const imageMapUrl = this.getSnapShotFromMap(this.station.latitude, this.station.longitude);
+    async shareGasStation() {
 
-        imageMapUrl.then((image)=> {
-           console.log(image);
+        this.getSnapShotFromMap(this.station.latitude, this.station.longitude).then((image) => {
+            console.log(image);
+            this.socialSharing.shareViaFacebook(this.station.title, image, null).then(() => {
+               console.log('Sharing station');
+            }).catch((e) => {
+                console.error(e);
+            });
         });
-
-
-        const fileName = 'imageMap_' + Math.random().toString(10) + '.png';
-
-        // await this.downloadFile(fileName, imageMapUrl);
-        // const fileNameUrl = await this.resolveLocalFile(fileName);
-
-        // Image or URL works
-        this.socialSharing.shareViaFacebook(null, '', null).then(() => {
-            //this.removeTempFile(file.name);
-        }).catch((e) => {
-            // Error!
-        });
-    }
-
-    async shareTwitter() {
-        // Either URL or Image
-        this.socialSharing.shareViaTwitter(null, null, this.url).then(() => {
-            // Success
-        }).catch((e) => {
-            // Error!
-        });
-    }
-
-    resolveLocalFile(fileName) {
-        return this.file.copyFile(this.file.applicationDirectory, fileName, this.file.cacheDirectory, `${new Date().getTime()}.jpg`);
-    }
-
-    async downloadFile(fileName, filePath) {
-        const url = encodeURI(filePath);
-        this.fileTransfer = this.transfer.create();
-        this.fileTransfer.download(url, this.file.externalRootDirectory + fileName, true).then((entry) => {
-            // here logging our success downloaded file path in mobile.
-            console.log('download completed: ' + entry.toURL());
-        }, (error) => {
-            // here logging our error its easier to find out what type of error occured.
-            console.log('download failed: ' + error);
-        });
-    }
-
-    removeTempFile(name) {
-        this.file.removeFile(this.file.cacheDirectory, name);
-    }
-
-    sharedGasStation() {
-
-        // this.userIsLogged().then((logged) => {
-        //
-        //     console.log(logged);
-        //     if (logged.logged === false) {
-        //         this.router.navigate(['login']);
-        //         return;
-        //     }
-        //
-        //     if (logged.with === 'facebook') {
-        //         this.sharedGasStationWithFacebook();
-        //     }
-        // });
-
-
-
-        console.log(this.station);
     }
 
     goToGasStation() {
@@ -250,25 +195,64 @@ export class StationProfileComponent implements OnInit, OnDestroy {
             '&zoom=' + this.mapOptions.zoom + '' +
             '&maptype=' + this.mapOptions.mapTypeId + '' +
             '&markers=color:red|' + parseFloat(this.mapMarkers.latitude) + ',' + parseFloat(this.mapMarkers.longitude);
-        console.log(staticMapUrl);
 
+        let canvasElement = <HTMLCanvasElement> document.getElementById('static_map_canvas');
+        let context = canvasElement.getContext('2d');
+        let myMapImage = new Image();
+        myMapImage.src = staticMapUrl;
+        myMapImage.onload = function () {
+            context.drawImage(myMapImage, 0, 0);
+        }
 
-        //TODO Tony esto es para capturar una imagen del mapa y compartirla, esto hay que hacerlo para compartir una imagen del mapa de la estacion
-        /*
-        * he tratado de hacerlo pero no me funciona, estoy usando el social sharing para compartir
-        * esperemos que funciones
-        * */
+        let dataUrl = canvasElement.toDataURL();
+        context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+        let name = new Date().getTime() + '.png';
+        let path = this.file.dataDirectory;
+        let options: IWriteOptions = { replace: true };
 
-        const staticLink = '<img src="' + staticMapUrl + '"/>';
-        let linkDiv = document.getElementById('map_canvas_static');
-        linkDiv.innerHTML = staticLink;
-        let image = null;
-        await html2canvas(linkDiv).then(canvas => {
-            const imgData = canvas.toDataURL('image/png');
-            image = imgData;
+        let data = dataUrl.split(',')[1];
+        let blob = this.b64toBlob(data, 'image/png');
+
+        this.file.writeFile(path, name, blob, options).then(res => {
+            this.storeImage(name);
+        }, err => {
+            console.log('error: ', err);
         });
 
-        return image;
+        return dataUrl;
+    }
+
+    private storeImage(imageName) {
+        let saveObj = { img: imageName };
+        this.storedImages.push(saveObj);
+        this.storage.set(STORAGE_KEY, this.storedImages).then(() => {
+            setTimeout(() =>  {
+                console.log('Saving image');
+            }, 500);
+        });
+    }
+
+    private b64toBlob(b64Data, contentType) {
+        contentType = contentType || '';
+        let sliceSize = 512;
+        let byteCharacters = atob(b64Data);
+        let byteArrays = [];
+
+        for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+            let slice = byteCharacters.slice(offset, offset + sliceSize);
+
+            let byteNumbers = new Array(slice.length);
+            for (let i = 0; i < slice.length; i++) {
+                byteNumbers[i] = slice.charCodeAt(i);
+            }
+
+            let byteArray = new Uint8Array(byteNumbers);
+
+            byteArrays.push(byteArray);
+        }
+
+        let blob = new Blob(byteArrays, { type: contentType });
+        return blob;
     }
 
     private setStationMarketToMap() {

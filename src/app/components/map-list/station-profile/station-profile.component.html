@@ -4,9 +4,9 @@
         <ion-icon name="settings"></ion-icon>
     </ion-fab-button>-->
 </div>
-<div id="map_canvas_static"></div>
-<!--<div class="profile-data"  [@slideInOut]>-->
+<canvas id="static_map_canvas" style="display: none;"></canvas>
 <div class="profile-data" [@slideInOut] *ngIf="show_profile_data">
+
     <div class="section1">
         <div class="flex-container">
             <div>
@@ -23,7 +23,7 @@
                         <ion-icon name="settings"></ion-icon>
                     </ion-fab-button>
                     <ion-fab-list side="bottom">
-                        <ion-fab-button (click)="shareFacebook()" >
+                        <ion-fab-button (click)="shareGasStation()" >
                             <ion-icon name="logo-vimeo" ></ion-icon>
                         </ion-fab-button>
                         <ion-fab-button (click)="goToGasStation()" >

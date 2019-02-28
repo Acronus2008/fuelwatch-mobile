@@ -103,17 +103,14 @@ export class LoginComponent implements OnInit {
                         // now we have the users info, let's save it in the NativeStorage
 
                         const facebookAccessToken = this.facebook.getAccessToken().then((token) => {
-                                this.facebook.logEvent(this.facebook.EVENTS.EVENT_NAME_PUSH_TOKEN_OBTAINED);
                                 return token;
                         });
 
                         this.setLocalStorageFacebookLogged(user, loading, facebookAccessToken);
 
-                        this.facebook.logEvent(this.facebook.EVENTS.EVENT_PARAM_SUCCESS);
                     });
             }, error => {
                 console.log(error);
-                this.facebook.logEvent(this.facebook.EVENTS.EVENT_NAME_SESSION_INTERRUPTIONS);
                 loading.dismiss();
             }).then(() => {
               this.nativeStorage.setItem('isLogged', true);

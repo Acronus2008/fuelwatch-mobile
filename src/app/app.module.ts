@@ -18,9 +18,9 @@ import {TwitterConnect} from '@ionic-native/twitter-connect/ngx';
 
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 import { File } from '@ionic-native/file/ngx';
-
+import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ngx';
-
+import { IonicStorageModule } from '@ionic/storage';
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -29,7 +29,8 @@ import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ng
       BrowserAnimationsModule,
       IonicModule.forRoot(),
       AppRoutingModule,
-      AngularFontAwesomeModule
+      AngularFontAwesomeModule,
+      IonicStorageModule.forRoot()
   ],
   providers: [
     StatusBar,
@@ -39,6 +40,7 @@ import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ng
       TwitterConnect,
       SocialSharing,
       File,
+      FileOpener,
       FileTransfer,
       FileTransferObject
   ],
